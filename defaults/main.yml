@@ -1,0 +1,9 @@
+#mariadb_databases:
+#  - name: db_name
+#  - collation: utf8mb4_unicode_ci (also the default value)
+
+#mariadb_users:
+#  - name: example_staging
+#    password: "{{ vault_example_staging_password }}"
+#    priv: 'example_staging.*:ALL'
+#    state: present

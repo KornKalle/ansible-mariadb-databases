@@ -1,0 +1,34 @@
+---
+# Borrowed from percona xtradb cluster ansible role:
+# https://github.com/cdelgehier/ansible-role-XtraDB-Cluster/blob/master/tasks/postinstall.yml
+# Many thanks to Cedric DELGEHIER
+- name: Create the databases
+  community.mysql.mysql_db:
+    name: "{{ item.name }}"
+    state: present
+    login_unix_socket: "{{ login_unix_socket | default('/var/run/mysqld/mysqld.sock') }}"
+    collation: "{{ item.collation | default('utf8mb4_unicode_ci')}}"
+  with_items: "{{ mariadb_databases }}"
+  become: true
+  register: _db
+  run_once: true
+  when: mariadb_databases is defined
+
+- name: Create MySQL users
+  community.mysql.mysql_user:
+    append_privs: "{{ item.append_privs | default('no')}}"
+    encrypted: "{{ item.encrypted | default('no')}}"
+    host: "{{ item.host | default('localhost')}}"
+    login_unix_socket: "{{ login_unix_socket | default('/var/run/mysqld/mysqld.sock') }}"
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    priv: "{{ item.priv | default('*.*:USAGE') }}"
+    state: "{{ item.state | default('present') }}"
+    update_password: always
+  become: true
+  with_items:
+    - "{{ mariadb_users }}"
+  no_log: true
+  # important when running on galera clusters
+  run_once: true
+  when: mariadb_users is defined
