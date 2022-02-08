@@ -5,7 +5,7 @@
 - name: Create the databases
   community.mysql.mysql_db:
     name: "{{ item.name }}"
-    state: present
+    state: "{{ item.state | default('present') }}"
     login_unix_socket: "{{ login_unix_socket | default('/var/run/mysqld/mysqld.sock') }}"
     collation: "{{ item.collation | default('utf8mb4_unicode_ci')}}"
   with_items: "{{ mariadb_databases }}"
