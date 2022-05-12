@@ -1,4 +1,12 @@
 ---
+- name: Install Required pip modules
+  pip:
+    name:
+      - PyMySQL
+    state: present
+    executable: pip3
+  when: ansible_os_family == "RedHat"
+
 # Borrowed from percona xtradb cluster ansible role:
 # https://github.com/cdelgehier/ansible-role-XtraDB-Cluster/blob/master/tasks/postinstall.yml
 # Many thanks to Cedric DELGEHIER
@@ -28,7 +36,7 @@
   become: true
   with_items:
     - "{{ mariadb_users }}"
-  no_log: true
+  #no_log: true
   # important when running on galera clusters
   run_once: true
   when: mariadb_users is defined
