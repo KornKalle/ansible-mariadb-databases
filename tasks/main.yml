@@ -39,3 +39,4 @@
   #no_log: true
   # important when running on galera clusters
   run_once: true
+  when: mariadb_users is defined
